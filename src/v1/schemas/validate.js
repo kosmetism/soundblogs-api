@@ -1,5 +1,5 @@
 const fortune = require('fortune');
-const validateSchema = require('is-my-schema-valid');
+const validateSchema = require('is-my-schema-valid').default;
 
 const BadRequestError = fortune.errors.BadRequestError;
 const dataURIRegex = /^\s*data:([a-z]+\/[a-z0-9\-\+]+(;[a-z\-]+\=[a-z0-9\-]+)?)?(;base64)?,[a-z0-9\!\$\&\'\,\(\)\*\+\,\;\=\-\.\_\~\:\@\/\?\%\s]*\s*$/i;
