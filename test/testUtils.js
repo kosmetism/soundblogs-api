@@ -17,7 +17,7 @@ function createTestUserData() {
 
 function createTestReviewData() {
   return {
-    artist: 'Test review artist'
+    artist: 'Test review artist',
     title: 'Test review title',
     releasedAt: new Date('1979-01-02'),
     intro: 'Test review intro',
@@ -51,7 +51,7 @@ function createJsonApiRequest() {
 
 module.exports = {
   createTestEmail,
-  createTestUserData
+  createTestUserData,
   createTestReviewData,
   createJsonApiRecord,
   createJsonApiRequest

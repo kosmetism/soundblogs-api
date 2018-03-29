@@ -14,21 +14,24 @@ const reviewDataType = {
   collection: 'reviews',
 
   definition: {
+    // release data provided by 3rd-party api
     artist: String,
     title: String,
+    coverUrl: String,
     releasedAt: Date,
 
+    // revuew data editable by user
     intro: String,
     content: String,
-    coverUrl: String,
-    rating: String,
+    rating: Number,
     favoriteTrack: String,
     genres: Array(String),
+    draft: Boolean,
 
+    // review meta data
     createdAt: Date,
     updatedAt: Date,
     publishedAt: Date,
-    draft: Boolean,
     author: ['user', 'reviews']
   },
 

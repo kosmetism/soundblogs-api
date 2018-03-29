@@ -1,12 +1,12 @@
 module.exports = {
-  port: process.env.NODE_PORT || process.env.PORT || 1979,
+  port: process.env.NODE_PORT || process.env.PORT || 1901,
 
-  staticFilesUrl: 'https://cdn.soundblogs.xyz',
+  staticFilesUrl: 'http://cdn.for.tests.org',
 
   auth: {
     tokenTTL: 1000 * 60 * 60 * 24 * 30 * 1, // 1 month
     resetPasswordTTL: 1000 * 60 * 60 * 24, // 1 day
-    bcryptHashRounds: 10
+    bcryptHashRounds: 2
   },
 
   s3: {
@@ -16,6 +16,6 @@ module.exports = {
   },
 
   mongodb: {
-    url: process.env.MONGODB_URL
+    url: 'mongodb://localhost:27017/soundblogs-test-db'
   }
 };

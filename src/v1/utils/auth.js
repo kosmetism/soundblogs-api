@@ -1,6 +1,6 @@
-const fortune from 'fortune';
-const config from 'c0nfig';
-const store from '../store';
+const fortune = require('fortune');
+const config = require('c0nfig');
+const store = require('../store');
 
 const BadRequestError = fortune.errors.BadRequestError;
 const UnauthorizedError = fortune.errors.UnauthorizedError;

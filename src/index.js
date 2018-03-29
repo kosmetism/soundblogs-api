@@ -17,6 +17,13 @@ app.use(cors());
 app.use(compression());
 app.use('/v1', v1());
 
-http.createServer(app).listen(port, () => {
-  console.log(`api server is listening on http://localhost:${port} env=${env} db=${mongodb.url}`);
-});
+function start () {
+  http.createServer(app).listen(port, () => {
+    console.log(`api server is listening on http://localhost:${port} env=${env} db=${mongodb.url}`);
+  });
+}
+
+module.exports = {
+  app,
+  start
+};
