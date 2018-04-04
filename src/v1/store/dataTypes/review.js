@@ -4,6 +4,7 @@ const speakingurl = require('speakingurl');
 const schemas = require('../../schemas');
 const authUtil = require('../../utils/auth');
 
+const findMethod = fortune.methods.find;
 const createMethod = fortune.methods.create;
 const updateMethod = fortune.methods.update;
 const deleteMethod = fortune.methods.delete;
@@ -34,6 +35,27 @@ const reviewDataType = {
     updatedAt: Date,
     publishedAt: Date,
     author: ['user', 'reviews']
+  },
+
+  async beforeRequest(store, request) {
+    const method = request.method;
+    const headers = request.meta.headers;
+    const query = request.uriObject.query || {};
+
+    if (method === findMethod) {
+      if (headers.authorization || query.token) {
+        await authUtil.validateToken({
+          request,
+          transaction: store.adapter,
+        });
+      } else {
+        if (!request.options.match) {
+          request.options.match = {};
+        }
+
+        request.options.match.draft = false;
+      }
+    }
   },
 
   async input(context, record, update) {

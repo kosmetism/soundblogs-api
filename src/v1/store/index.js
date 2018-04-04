@@ -60,7 +60,7 @@ store.request = async function (options) {
   const beforeRequestHook = beforeRequestHooks[options.type];
 
   if (beforeRequestHook) {
-    await beforeRequestHook(options);
+    await beforeRequestHook(store, options);
   }
 
   return internalRequest.call(this, options);
