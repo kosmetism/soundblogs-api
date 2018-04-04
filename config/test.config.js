@@ -17,5 +17,10 @@ module.exports = {
 
   mongodb: {
     url: 'mongodb://localhost:27017/soundblogs-test-db'
+  },
+
+  spotify: {
+    clientId: process.env.SPOTIFY_CLIENT_ID,
+    clientSecret: process.env.SPOTIFY_CLIENT_SECRET
   }
 };

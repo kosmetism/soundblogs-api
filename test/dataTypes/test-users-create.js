@@ -24,7 +24,7 @@ test.beforeEach(() => {
 test('POST /users not matching schema', async t => {
   const notValid = createJsonApiRecord('user', {email: 'foo', password: 'qwert'});
   const res = await request
-    .post('/v1/users')
+    .post('/v1/resources/users')
     .send(notValid);
 
   t.is(res.status, 400,
@@ -39,7 +39,7 @@ test('POST /users not matching schema', async t => {
 
 test('POST /users matching schema', async t => {
   const res = await request
-    .post('/v1/users')
+    .post('/v1/resources/users')
     .send(sendData);
 
   t.is(res.status, 201,

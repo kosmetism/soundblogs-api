@@ -70,6 +70,11 @@ store.request = async function (options) {
 store.on(fortune.events.connect, () => {
   dataTypeIndexes.forEach(dataType => {
     const db = store.adapter.db;
+
+    if (!dataType.index) {
+      return;
+    }
+
     const { keys, options } = dataType.index;
 
     db.collection(dataType.collection).createIndex(keys, options);

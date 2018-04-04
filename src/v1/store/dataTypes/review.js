@@ -1,19 +1,12 @@
 const fortune = require('fortune');
-const parseDataURI = require('parse-data-uri');
 const speakingurl = require('speakingurl');
-const config = require('c0nfig');
 
 const schemas = require('../../schemas');
 const authUtil = require('../../utils/auth');
 
-const findMethod = fortune.methods.find;
 const createMethod = fortune.methods.create;
 const updateMethod = fortune.methods.update;
 const deleteMethod = fortune.methods.delete;
-
-const BadRequestError = fortune.errors.BadRequestError;
-
-const allowedMimetypes = ['image/png', 'image/jpeg', 'image/gif'];
 
 const reviewDataType = {
   name: 'review',

@@ -6,9 +6,12 @@ const { env } = require('c0nfig');
 
 const store = require('./store');
 
+// third-party services integrations
+const spotifyIntegration = require('./integrations/spotify');
+
 const formDataSerializer = fortuneHTTP.FormDataSerializer;
 
-const httpListener = fortuneHTTP(store, {
+const fortuneHTTPListener = fortuneHTTP(store, {
   serializers: [
     [jsonApiSerializer],
     [formDataSerializer]
@@ -18,8 +21,8 @@ const httpListener = fortuneHTTP(store, {
 // const verboseEnvs = ['development', 'test'];
 const verboseEnvs = ['development'];
 
-function apiMiddleware (req, res) {
-  return httpListener(req, res).catch((err) => {
+function fortuneMiddleware (req, res) {
+  return fortuneHTTPListener(req, res).catch((err) => {
     if (verboseEnvs.includes(env)) {
       console.log(chalk.red(err.stack));
     }
@@ -29,7 +32,8 @@ function apiMiddleware (req, res) {
 module.exports = function v1 () {
   const router = express.Router();
 
-  router.use(apiMiddleware);
+  router.use('/resources', fortuneMiddleware);
+  router.use('/spotify', spotifyIntegration());
 
   return router;
 };

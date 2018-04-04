@@ -25,7 +25,7 @@ test.before('create test user data', () => {
 
 test.before('POST /users (register user)', async t => {
   const res = await request
-    .post('/v1/users')
+    .post('/v1/resources/users')
     .send(createJsonApiRecord('user', userData));
 
   t.is(res.status, 201);
@@ -38,7 +38,7 @@ test.before('POST /users (register user)', async t => {
 
 test.before('POST /tokens (login user)', async t => {
   const res = await request
-    .post('/v1/tokens')
+    .post('/v1/resources/tokens')
     .send(createJsonApiRecord('token', {
       email: userData.email,
       password: userData.password
@@ -58,7 +58,7 @@ test.before('create test review data', () => {
 
 test('POST /reviews without token', async t => {
   const res = await request
-    .post('/v1/reviews')
+    .post('/v1/resources/reviews')
     .send(createJsonApiRecord('review', reviewData));
 
   t.is(res.status, 400,
@@ -71,7 +71,7 @@ test('POST /reviews without token', async t => {
 
 test('POST /reviews with invalid token', async t => {
   const res = await request
-    .post('/v1/reviews')
+    .post('/v1/resources/reviews')
     .set('Authorization', 'Invalid token id')
     .send(createJsonApiRecord('review', reviewData));
 
@@ -85,7 +85,7 @@ test('POST /reviews with invalid token', async t => {
 
 test('POST /reviews with valid token', async t => {
   const res = await request
-    .post('/v1/reviews')
+    .post('/v1/resources/reviews')
     .set('Authorization', tokenId)
     .send(createJsonApiRecord('review', reviewData));
 

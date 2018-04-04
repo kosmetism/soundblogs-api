@@ -17,5 +17,10 @@ module.exports = {
 
   mongodb: {
     url: process.env.MONGODB_URL
+  },
+
+  spotify: {
+    clientId: process.env.SPOTIFY_CLIENT_ID,
+    clientSecret: process.env.SPOTIFY_CLIENT_SECRET
   }
 };

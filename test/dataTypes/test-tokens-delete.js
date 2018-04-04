@@ -25,7 +25,7 @@ test.before('create test user data', () => {
 
 test.before('POST /users (register user I)', async t => {
   const res = await request
-    .post('/v1/users')
+    .post('/v1/resources/users')
     .send(createJsonApiRecord('user', userDataI));
 
   t.is(res.status, 201);
@@ -36,7 +36,7 @@ test.before('POST /users (register user I)', async t => {
 
 test.before('POST /users (register user II)', async t => {
   const res = await request
-    .post('/v1/users')
+    .post('/v1/resources/users')
     .send(createJsonApiRecord('user', userDataII));
 
   t.is(res.status, 201);
@@ -47,7 +47,7 @@ test.before('POST /users (register user II)', async t => {
 
 test.before('POST /tokens (login user I)', async t => {
   const res = await request
-    .post('/v1/tokens')
+    .post('/v1/resources/tokens')
     .send(createJsonApiRecord('token', {
       email: userDataI.email,
       password: userDataI.password
@@ -63,7 +63,7 @@ test.before('POST /tokens (login user I)', async t => {
 
 test.before('POST /tokens (login user II)', async t => {
   const res = await request
-    .post('/v1/tokens')
+    .post('/v1/resources/tokens')
     .send(createJsonApiRecord('token', {
       email: userDataII.email,
       password: userDataII.password
@@ -79,7 +79,7 @@ test.before('POST /tokens (login user II)', async t => {
 
 test('DELETE /tokens without token', async t => {
   const res = await request
-    .del(`/v1/tokens/${tokenIdI}`);
+    .del(`/v1/resources/tokens/${tokenIdI}`);
 
   t.is(res.status, 400,
     'should respond with 400 status');
@@ -92,7 +92,7 @@ test('DELETE /tokens without token', async t => {
 test('DELETE /tokens with invalid token', async t => {
   const res = await request
     .set('Authorization', 'Invalid token id')
-    .del(`/v1/tokens/${tokenIdI}`);
+    .del(`/v1/resources/tokens/${tokenIdI}`);
 
   t.is(res.status, 401,
     'should respond with 401 status');
@@ -105,7 +105,7 @@ test('DELETE /tokens with invalid token', async t => {
 test('DELETE /tokens without corresponding token', async t => {
   const res = await request
     .set('Authorization', tokenIdII)
-    .del(`/v1/tokens/${tokenIdI}`);
+    .del(`/v1/resources/tokens/${tokenIdI}`);
 
   t.is(res.status, 403,
     'should respond with 400 status');
@@ -118,7 +118,7 @@ test('DELETE /tokens without corresponding token', async t => {
 test('DELETE /tokens with valid token', async t => {
   const res = await request
     .set('Authorization', tokenIdI)
-    .del(`/v1/tokens/${tokenIdI}`);
+    .del(`/v1/resources/tokens/${tokenIdI}`);
 
   t.is(res.status, 204,
     'should respond with 204 status');

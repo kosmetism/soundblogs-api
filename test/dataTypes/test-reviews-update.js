@@ -26,7 +26,7 @@ test.before('create test user data', () => {
 
 test.before('POST /users (register user)', async t => {
   const res = await request
-    .post('/v1/users')
+    .post('/v1/resources/users')
     .send(createJsonApiRecord('user', userData));
 
   t.is(res.status, 201);
@@ -39,7 +39,7 @@ test.before('POST /users (register user)', async t => {
 
 test.before('POST /tokens (login user)', async t => {
   const res = await request
-    .post('/v1/tokens')
+    .post('/v1/resources/tokens')
     .send(createJsonApiRecord('token', {
       email: userData.email,
       password: userData.password
@@ -59,7 +59,7 @@ test.before('create test review data', () => {
 
 test.before('POST /reviews (create review)', async t => {
   const res = await request
-    .post('/v1/reviews')
+    .post('/v1/resources/reviews')
     .set('Authorization', tokenId)
     .send(createJsonApiRecord('review', reviewData));
 
@@ -76,7 +76,7 @@ test.before('POST /reviews (create review)', async t => {
 
 test('PATCH /reviews without token', async t => {
   const res = await request
-    .patch(`/v1/reviews/${reviewId}`)
+    .patch(`/v1/resources/reviews/${reviewId}`)
     .send(createJsonApiRecord('review', reviewId, reviewData));
 
   t.is(res.status, 400,
@@ -89,7 +89,7 @@ test('PATCH /reviews without token', async t => {
 
 test('PATCH /reviews with invalid token', async t => {
   const res = await request
-    .patch(`/v1/reviews/${reviewId}`)
+    .patch(`/v1/resources/reviews/${reviewId}`)
     .set('Authorization', 'Invalid token id')
     .send(createJsonApiRecord('review', reviewId, reviewData));
 
@@ -107,7 +107,7 @@ test('PATCH /reviews with valid token', async t => {
     draft: false
   };
   const res = await request
-    .patch(`/v1/reviews/${reviewId}`)
+    .patch(`/v1/resources/reviews/${reviewId}`)
     .set('Authorization', tokenId)
     .send(createJsonApiRecord('review', reviewId, newData));
 

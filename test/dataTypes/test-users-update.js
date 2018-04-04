@@ -23,7 +23,7 @@ test.before('create test user data', () => {
 
 test.before('POST /users (register user)', async t => {
   const res = await request
-    .post('/v1/users')
+    .post('/v1/resources/users')
     .send(createJsonApiRecord('user', userData));
 
   t.is(res.status, 201);
@@ -36,7 +36,7 @@ test.before('POST /users (register user)', async t => {
 
 test.before('POST /tokens (login user)', async t => {
   const res = await request
-    .post('/v1/tokens')
+    .post('/v1/resources/tokens')
     .send(createJsonApiRecord('token', {
       email: userData.email,
       password: userData.password
@@ -52,7 +52,7 @@ test.before('POST /tokens (login user)', async t => {
 
 test('PATCH /users without token', async t => {
   const res = await request
-    .patch(`/v1/users/${userId}`)
+    .patch(`/v1/resources/users/${userId}`)
     .send(createJsonApiRecord('user', userId, {name: 'New name'}));
 
   t.is(res.status, 400,
@@ -65,7 +65,7 @@ test('PATCH /users without token', async t => {
 
 test('PATCH /users with invalid token', async t => {
   const res = await request
-    .patch(`/v1/users/${userId}`)
+    .patch(`/v1/resources/users/${userId}`)
     .set('Authorization', 'Invalid token id')
     .send(createJsonApiRecord('user', userId, {name: 'New name'}));
 
@@ -79,7 +79,7 @@ test('PATCH /users with invalid token', async t => {
 
 test('PATCH /users with valid token but not matching schema', async t => {
   const res = await request
-    .patch(`/v1/users/${userId}`)
+    .patch(`/v1/resources/users/${userId}`)
     .set('Authorization', tokenId)
     .send(createJsonApiRecord('user', userId, {pictureData: 'foo'}));
 
@@ -96,7 +96,7 @@ test('PATCH /users with valid token but not matching schema', async t => {
 test('PATCH /users with valid token and matching schema', async t => {
   const newData = {name: 'Super new name', email: 'trysend@newemail.com'};
   const res = await request
-    .patch(`/v1/users/${userId}`)
+    .patch(`/v1/resources/users/${userId}`)
     .set('Authorization', tokenId)
     .send(createJsonApiRecord('user', userId, newData));
 
