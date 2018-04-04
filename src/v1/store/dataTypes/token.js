@@ -1,10 +1,16 @@
 const fortune = require('fortune');
+const config = require('c0nfig');
+
+const schemas = require('../../schemas');
+const authUtil = require('../../utils/auth');
+const passwordsUtil = require('../../utils/passwords');
 
 const findMethod = fortune.methods.find;
 const createMethod = fortune.methods.create;
 const updateMethod = fortune.methods.update;
 const deleteMethod = fortune.methods.delete;
 
+const NotFoundError = fortune.errors.NotFoundError;
 const ForbiddenError = fortune.errors.ForbiddenError;
 const BadRequestError = fortune.errors.BadRequestError;
 
@@ -27,18 +33,51 @@ const tokenDataType = {
     }
   },
 
-  async input(context, record, update) {
+  async input(context, record) {
     const method = context.request.method;
 
     if (method === createMethod) {
+      schemas.validate(record, schemas.token.create);
+
+      const users = await context.transaction.find('user', null, {
+        match: {
+          email: record.email
+        },
+        fields: {
+          name: true,
+          email: true,
+          password: true,
+          pictureUrl: true
+        }
+      });
+
+      if (!users.count) {
+        throw new NotFoundError(`There is no user with email - ${record.email}`);
+      }
+
+      const [ user ] = users;
+      const same = await passwordsUtil.compare(record.password.toString(), user.password);
+
+      if (!same) {
+        throw new BadRequestError('Passwords do not match');
+      }
+
+      record.userId = user.id;
+      record.expireAt = new Date(Date.now() + config.auth.tokenTTL);
+
       return record;
     }
 
     if (method === updateMethod) {
-      return update;
+      throw new ForbiddenError('Tokens cannot be updated');
     }
 
     if (method === deleteMethod) {
+      const user = await authUtil.validateToken(context.request);
+
+      if (record.userId !== user.id) {
+        throw new ForbiddenError('Token is not valid for this user');
+      }
     }
 
     return null;
@@ -48,7 +87,10 @@ const tokenDataType = {
     const method = context.request.method;
 
     if (method === findMethod) {
+      throw new ForbiddenError('Tokens access is not allowed');
     }
+
+    record.accessedAt = new Date();
 
     return record;
   }

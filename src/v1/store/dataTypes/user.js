@@ -58,7 +58,7 @@ const userDataType = {
         throw new ForbiddenError('Invalid update');
       }
 
-      const user = await authUtil.validateToken(context.request);
+      const user = await authUtil.validateToken(context);
 
       schemas.validate(update.replace, schemas.user.update);
 
@@ -88,7 +88,7 @@ const userDataType = {
 
     if (method === findMethod) {
       try {
-        await authUtil.validateToken(context.request);
+        await authUtil.validateToken(context);
       } catch (e) {
         delete record.email;
       }

@@ -1,19 +1,18 @@
 const fortune = require('fortune');
-const store = require('../store');
 
 const BadRequestError = fortune.errors.BadRequestError;
 const UnauthorizedError = fortune.errors.UnauthorizedError;
 
-async function validateToken (request, skipUserData) {
-  const headers = request.meta.headers;
-  const query = request.uriObject.query || {};
+async function validateToken (context, skipUserData) {
+  const headers = context.request.meta.headers;
+  const query = context.request.uriObject.query || {};
   const tokenId = headers.authorization || query.token;
 
   if (!tokenId) {
     throw new BadRequestError('Token is missing');
   }
 
-  const tokens = await store.adapter.find('token', [tokenId], {
+  const tokens = await context.transaction.find('token', [tokenId], {
     fields: {
       userId: true
     }
@@ -29,7 +28,7 @@ async function validateToken (request, skipUserData) {
     return token;
   }
 
-  const users = await store.adapter.find('user', [token.userId], {
+  const users = await context.transaction.find('user', [token.userId], {
     fields: {
       email: true,
       roles: true
