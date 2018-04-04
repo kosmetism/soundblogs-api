@@ -78,6 +78,11 @@ const userDataType = {
     }
 
     if (method === deleteMethod) {
+      const user = await authUtil.validateToken(context);
+
+      if (user.id !== record.id) {
+        throw new ForbiddenError('Token is not valid for this user');
+      }
     }
 
     return null;
