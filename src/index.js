@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const logger = require('morgan');
 const compression = require('compression');
-const { host, port, env, mongodb } = require('c0nfig');
+const { port, env, mongodb } = require('c0nfig');
 const v1 = require('./v1');
 
 const app = express();

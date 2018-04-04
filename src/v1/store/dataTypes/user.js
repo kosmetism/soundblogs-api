@@ -1,5 +1,6 @@
 const fortune = require('fortune');
 const parseDataURI = require('parse-data-uri');
+const config = require('c0nfig');
 
 const schemas = require('../../schemas');
 const authUtil = require('../../utils/auth');

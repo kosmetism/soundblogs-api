@@ -35,7 +35,7 @@ Object.keys(dataTypes).forEach(key => {
   if (isFunction(dataType.beforeRequest)) {
     beforeRequestHooks[dataType.name] = dataType.beforeRequest;
   }
-})
+});
 
 // create database adapter
 const adapter = [

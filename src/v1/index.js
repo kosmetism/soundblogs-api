@@ -15,13 +15,16 @@ const httpListener = fortuneHTTP(store, {
   ]
 });
 
+// const verboseEnvs = ['development', 'test'];
+const verboseEnvs = ['development'];
+
 function apiMiddleware (req, res) {
   return httpListener(req, res).catch((err) => {
-    if ('development' === env) {
+    if (verboseEnvs.includes(env)) {
       console.log(chalk.red(err.stack));
     }
   });
-};
+}
 
 module.exports = function v1 () {
   const router = express.Router();

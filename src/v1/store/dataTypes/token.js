@@ -1,5 +1,4 @@
 const fortune = require('fortune');
-const customDefinitions = require('../customDefinitions');
 
 const findMethod = fortune.methods.find;
 const createMethod = fortune.methods.create;

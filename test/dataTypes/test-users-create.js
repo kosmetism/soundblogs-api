@@ -27,15 +27,13 @@ test('POST /users not matching schema', async t => {
     .post('/v1/users')
     .send(notValid);
 
-  console.log(res)
-
   t.is(res.status, 400,
     'should respond with 400 status');
   t.true(_.isArray(res.body.errors),
     'should have errors as array');
   t.is(res.body.errors[0].detail, 'Error validating against schema',
     'should respond with correct error message');
-  t.is(res.body.errors[0].schema.length, 4,
+  t.is(res.body.errors[0].schema.length, 3,
     'should have all schema errors');
 });
 
@@ -56,6 +54,4 @@ test('POST /users matching schema', async t => {
     'should have email value');
   t.is(res.body.data.attributes['picture-url'], `${config.staticFilesUrl}/defaults/avatar`,
     'should have default picture-url');
-  t.is(res.body.data.attributes.roles.join(','), userData.roles.join(','),
-    'should have roles value');
 });

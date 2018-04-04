@@ -1,5 +1,4 @@
 const fortune = require('fortune');
-const config = require('c0nfig');
 const store = require('../store');
 
 const BadRequestError = fortune.errors.BadRequestError;
