@@ -17,11 +17,10 @@ function createTestUserData() {
 
 function createTestReviewData() {
   return {
-    artist: 'Test review artist',
-    title: 'Test review title',
-    releasedAt: new Date('1979-01-02'),
     intro: 'Test review intro',
     content: 'Test review content',
+    rating: 8,
+    favoriteTrack: 'Test favorite track',
     genres: ['post-disco', 'electronic']
   };
 }

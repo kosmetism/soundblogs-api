@@ -1,12 +1,19 @@
 const fortune = require('fortune');
+const parseDataURI = require('parse-data-uri');
+const speakingurl = require('speakingurl');
+const config = require('c0nfig');
+
+const schemas = require('../../schemas');
+const authUtil = require('../../utils/auth');
 
 const findMethod = fortune.methods.find;
 const createMethod = fortune.methods.create;
 const updateMethod = fortune.methods.update;
 const deleteMethod = fortune.methods.delete;
 
-const ForbiddenError = fortune.errors.ForbiddenError;
 const BadRequestError = fortune.errors.BadRequestError;
+
+const allowedMimetypes = ['image/png', 'image/jpeg', 'image/gif'];
 
 const reviewDataType = {
   name: 'review',
@@ -20,7 +27,8 @@ const reviewDataType = {
     coverUrl: String,
     releasedAt: Date,
 
-    // revuew data editable by user
+    // review data editable by user
+    slug: String,
     intro: String,
     content: String,
     rating: Number,
@@ -37,12 +45,39 @@ const reviewDataType = {
 
   async input(context, record, update) {
     const method = context.request.method;
+    const user = await authUtil.validateToken(context);
 
     if (method === createMethod) {
+      schemas.validate(record, schemas.review.create);
+
+      record.author = user.id;
+      record.draft = true;
+
+      if (record.title && !record.slug) {
+        record.slug = speakingurl(record.title);
+      }
+
+      const now = new Date();
+
+      record.createdAt = now;
+      record.updatedAt = now;
+
       return record;
     }
 
     if (method === updateMethod) {
+      schemas.validate(update.replace, schemas.review.update);
+
+      update.replace.updatedAt = new Date();
+
+      if (update.replace.title && !update.replace.slug) {
+        update.replace.slug = speakingurl(update.replace.title);
+      }
+
+      if (!update.replace.draft) {
+        update.replace.publishedAt = new Date();
+      }
+
       return update;
     }
 
@@ -53,10 +88,11 @@ const reviewDataType = {
   },
 
   async output(context, record) {
-    const method = context.request.method;
-
-    if (method === findMethod) {
+    if (record.draft) {
+      delete record.publishedAt;
     }
+
+    record.accessedAt = new Date();
 
     return record;
   }

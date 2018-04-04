@@ -32,6 +32,7 @@
     "lodash": "^4.17.5",
     "morgan": "^1.9.0",
     "parse-data-uri": "^0.2.0",
+    "speakingurl": "^14.0.1",
     "superagent": "^3.8.2",
     "superagent-defaults": "^0.1.14",
     "uuid": "^3.2.1",
