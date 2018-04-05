@@ -2,7 +2,8 @@ const fortune = require('fortune');
 const speakingurl = require('speakingurl');
 
 const schemas = require('../../schemas');
-const authUtil = require('../../utils/auth');
+const authUtil = require('../../../utils/auth');
+const validateSchema = require('../../../utils/validateSchema');
 
 const findMethod = fortune.methods.find;
 const createMethod = fortune.methods.create;
@@ -44,6 +45,7 @@ const reviewDataType = {
 
     if (method === findMethod) {
       if (headers.authorization || query.token) {
+        // mimic context object
         await authUtil.validateToken({
           request,
           transaction: store.adapter,
@@ -63,7 +65,7 @@ const reviewDataType = {
     const user = await authUtil.validateToken(context);
 
     if (method === createMethod) {
-      schemas.validate(record, schemas.review.create);
+      validateSchema(record, schemas.review.create);
 
       record.author = user.id;
       record.draft = true;
@@ -81,7 +83,7 @@ const reviewDataType = {
     }
 
     if (method === updateMethod) {
-      schemas.validate(update.replace, schemas.review.update);
+      validateSchema(update.replace, schemas.review.update);
 
       update.replace.updatedAt = new Date();
 

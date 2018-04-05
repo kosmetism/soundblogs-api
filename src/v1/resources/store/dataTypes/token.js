@@ -2,8 +2,9 @@ const fortune = require('fortune');
 const config = require('c0nfig');
 
 const schemas = require('../../schemas');
-const authUtil = require('../../utils/auth');
-const passwordsUtil = require('../../utils/passwords');
+const authUtil = require('../../../utils/auth');
+const passwordsUtil = require('../../../utils/passwords');
+const validateSchema = require('../../../utils/validateSchema');
 
 const findMethod = fortune.methods.find;
 const createMethod = fortune.methods.create;
@@ -37,7 +38,7 @@ const tokenDataType = {
     const method = context.request.method;
 
     if (method === createMethod) {
-      schemas.validate(record, schemas.token.create);
+      validateSchema(record, schemas.token.create);
 
       const users = await context.transaction.find('user', null, {
         match: {

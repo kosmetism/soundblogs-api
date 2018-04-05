@@ -3,9 +3,10 @@ const parseDataURI = require('parse-data-uri');
 const config = require('c0nfig');
 
 const schemas = require('../../schemas');
-const authUtil = require('../../utils/auth');
-const filesUtil = require('../../utils/files');
-const passwordsUtil = require('../../utils/passwords');
+const authUtil = require('../../../utils/auth');
+const filesUtil = require('../../../utils/files');
+const passwordsUtil = require('../../../utils/passwords');
+const validateSchema = require('../../../utils/validateSchema');
 const customDefinitions = require('../customDefinitions');
 
 const findMethod = fortune.methods.find;
@@ -44,7 +45,7 @@ const userDataType = {
     const method = context.request.method;
 
     if (method === createMethod) {
-      schemas.validate(record, schemas.user.create);
+      validateSchema(record, schemas.user.create);
 
       const hash = await passwordsUtil.save(record.password);
 
@@ -60,7 +61,7 @@ const userDataType = {
 
       const user = await authUtil.validateToken(context);
 
-      schemas.validate(update.replace, schemas.user.update);
+      validateSchema(update.replace, schemas.user.update);
 
       if (update.replace.pictureData) {
         const parsed = parseDataURI(update.replace.pictureData);

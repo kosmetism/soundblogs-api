@@ -11,8 +11,11 @@ const defaults = {
   }
 };
 
-module.exports = function validate (record, schema, options) {
-  const result = validateSchema(record, schema, { ...defaults, ...options });
+module.exports = function schemaValidator (record, schema, options) {
+  const result = validateSchema(record, schema, {
+    ...defaults,
+    ...options
+  });
 
   if (!result.valid) {
     const badRequestError = new BadRequestError('Error validating against schema');
