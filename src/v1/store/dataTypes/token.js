@@ -1,17 +1,14 @@
 const fortune = require('fortune');
 const config = require('c0nfig');
 
-const schemas = require('../../schemas');
-const authUtil = require('../../../utils/auth');
-const passwordsUtil = require('../../../utils/passwords');
-const validateSchema = require('../../../utils/validateSchema');
+const schemas = require('../../resources/schemas');
+const authUtil = require('../../utils/auth');
+const passwordsUtil = require('../../utils/passwords');
+const validateSchema = require('../../utils/validateSchema');
+const customDefinitions = require('../customDefinitions');
 
-const findMethod = fortune.methods.find;
-const createMethod = fortune.methods.create;
-const updateMethod = fortune.methods.update;
-const deleteMethod = fortune.methods.delete;
+const { GET, POST, PATCH, DELETE } = require('../methodsMap');
 
-const NotFoundError = fortune.errors.NotFoundError;
 const ForbiddenError = fortune.errors.ForbiddenError;
 const BadRequestError = fortune.errors.BadRequestError;
 
@@ -21,6 +18,9 @@ const tokenDataType = {
   collection: 'tokens',
 
   definition: {
+    email: customDefinitions.Email,
+    password: String,
+
     userId: String,
     expireAt: Date
   },
@@ -37,7 +37,7 @@ const tokenDataType = {
   async input(context, record) {
     const method = context.request.method;
 
-    if (method === createMethod) {
+    if (method === POST) {
       validateSchema(record, schemas.token.create);
 
       const users = await context.transaction.find('user', null, {
@@ -53,15 +53,18 @@ const tokenDataType = {
       });
 
       if (!users.count) {
-        throw new NotFoundError(`There is no user with email - ${record.email}`);
+        throw new BadRequestError('Email or password are not correct');
       }
 
       const [ user ] = users;
       const same = await passwordsUtil.compare(record.password.toString(), user.password);
 
       if (!same) {
-        throw new BadRequestError('Passwords do not match');
+        throw new BadRequestError('Email or password are not correct');
       }
+
+      delete record.email;
+      delete record.password;
 
       record.userId = user.id;
       record.expireAt = new Date(Date.now() + config.auth.tokenTTL);
@@ -69,11 +72,11 @@ const tokenDataType = {
       return record;
     }
 
-    if (method === updateMethod) {
+    if (method === PATCH) {
       throw new ForbiddenError('Tokens cannot be updated');
     }
 
-    if (method === deleteMethod) {
+    if (method === DELETE) {
       const user = await authUtil.validateToken(context);
 
       if (record.userId !== user.id) {
@@ -87,9 +90,12 @@ const tokenDataType = {
   async output(context, record) {
     const method = context.request.method;
 
-    if (method === findMethod) {
+    if (method === GET) {
       throw new ForbiddenError('Tokens access is not allowed');
     }
+
+    delete record.email;
+    delete record.password;
 
     record.accessedAt = new Date();
 

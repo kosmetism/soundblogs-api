@@ -83,4 +83,8 @@ store.on(fortune.events.connect, () => {
 
 store.connect();
 
+store.__createCustomContext = request => {
+  return {request, transaction: store.adapter};
+};
+
 module.exports = store;

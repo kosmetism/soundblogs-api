@@ -20,6 +20,7 @@
   "dependencies": {
     "aws-sdk": "^2.216.1",
     "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
     "c0nfig": "^0.2.2",
     "compression": "^1.7.2",
     "cors": "^2.8.4",

@@ -6,7 +6,8 @@ const create = {
   },
   password: {
     type: 'string',
-    required: true
+    required: true,
+    minLength: 1
   }
 };
 

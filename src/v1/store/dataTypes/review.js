@@ -1,14 +1,10 @@
-const fortune = require('fortune');
 const speakingurl = require('speakingurl');
 
-const schemas = require('../../schemas');
-const authUtil = require('../../../utils/auth');
-const validateSchema = require('../../../utils/validateSchema');
+const schemas = require('../../resources/schemas');
+const authUtil = require('../../utils/auth');
+const validateSchema = require('../../utils/validateSchema');
 
-const findMethod = fortune.methods.find;
-const createMethod = fortune.methods.create;
-const updateMethod = fortune.methods.update;
-const deleteMethod = fortune.methods.delete;
+const { GET, POST, PATCH, DELETE } = require('../methodsMap');
 
 const reviewDataType = {
   name: 'review',
@@ -43,13 +39,12 @@ const reviewDataType = {
     const headers = request.meta.headers;
     const query = request.uriObject.query || {};
 
-    if (method === findMethod) {
+    if (method === GET) {
       if (headers.authorization || query.token) {
         // mimic context object
-        await authUtil.validateToken({
-          request,
-          transaction: store.adapter,
-        });
+        const context = store.__createCustomContext(request);
+
+        await authUtil.validateToken(context);
       } else {
         if (!request.options.match) {
           request.options.match = {};
@@ -64,7 +59,7 @@ const reviewDataType = {
     const method = context.request.method;
     const user = await authUtil.validateToken(context);
 
-    if (method === createMethod) {
+    if (method === POST) {
       validateSchema(record, schemas.review.create);
 
       record.author = user.id;
@@ -82,7 +77,7 @@ const reviewDataType = {
       return record;
     }
 
-    if (method === updateMethod) {
+    if (method === PATCH) {
       validateSchema(update.replace, schemas.review.update);
 
       update.replace.updatedAt = new Date();
@@ -98,7 +93,7 @@ const reviewDataType = {
       return update;
     }
 
-    if (method === deleteMethod) {
+    if (method === DELETE) {
     }
 
     return null;

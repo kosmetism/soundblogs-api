@@ -2,7 +2,7 @@ const express = require('express');
 const config = require('c0nfig');
 const SpotifyWebApi = require('spotify-web-api-node');
 
-module.exports = function spotify () {
+module.exports = function spotify (store) {
   const router = express.Router();
   // const spotifyApi = SpotifyWebApi({
   //   cliendId: config.spotify.cliendId,
