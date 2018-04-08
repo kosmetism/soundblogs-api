@@ -4,6 +4,8 @@ const jsonApiSerializer = require('fortune-json-api');
 const chalk = require('chalk');
 const { env } = require('c0nfig');
 
+const jsonApiMeta = require('../utils/jsonApiMeta');
+
 const formDataSerializer = fortuneHTTP.FormDataSerializer;
 
 // const verboseEnvs = ['development', 'test'];
@@ -13,7 +15,9 @@ module.exports = function resources (store) {
   const router = express.Router();
   const fortuneHTTPListener = fortuneHTTP(store, {
     serializers: [
-      [jsonApiSerializer],
+      [jsonApiSerializer, {
+        jsonapi: { ...jsonApiMeta }
+      }],
       [formDataSerializer]
     ]
   });

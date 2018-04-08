@@ -21,7 +21,8 @@
 
 ### Integrations
 
-- `POST /v1/integrations/spotify/authorize` - authorize your spotify account (requires token)
-- `POST /v1/integrations/spotify/search` - search spotify releases (requires token)
+- `GET /v1/integrations/spotify/authorize-url` - get authorize redirect url for your spotify account (requires token)
+- `GET /v1/integrations/spotify/access-token` - exchange code for spotify access token of your spotify account (requires token)
+- `GET /v1/integrations/spotify/search` - search spotify releases (requires token)
 
 ---
