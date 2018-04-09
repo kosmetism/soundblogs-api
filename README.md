@@ -8,7 +8,6 @@
 
 - `POST /v1/resources/tokens` - create authorization token (login)
 - `DELETE /v1/resources/tokens` - remove authorization token (logout, requires token)
-- 
 - `POST /v1/resources/users` - create your user (registration)
 - `GET /v1/resources/users/:userId` - get any user (requires token for personal data)
 - `PATCH /v1/resources/users` - update your user (requires token)

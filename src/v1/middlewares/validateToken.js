@@ -1,6 +1,6 @@
 const url = require('url');
 
-const authUtil = require('../../utils/auth');
+const authUtil = require('../utils/auth');
 
 module.exports = function validateToken (store) {
   return async (req, res, next) => {

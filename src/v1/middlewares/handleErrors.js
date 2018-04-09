@@ -2,7 +2,7 @@ const { errors } = require('fortune');
 const chalk = require('chalk');
 const { env } = require('c0nfig');
 
-const jsonApiMeta = require('../../utils/jsonApiMeta');
+const { jsonapiObject } = require('../utils/jsonapi');
 
 // const verboseEnvs = ['development', 'test'];
 const verboseEnvs = ['development'];
@@ -37,7 +37,7 @@ module.exports = function handleErrors (err, req, res, next) {
   const status = getStatus(err);
   const response = {
     jsonapi: {
-      ...jsonApiMeta
+      ...jsonapiObject
     },
     errors: [{
       title: err.name,
