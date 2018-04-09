@@ -11,6 +11,7 @@ module.exports = function v1 () {
 
   router.use('/resources', resources(store));
   router.use('/integrations', integrations(store));
+
   router.use(handleNotFounds);
   router.use(handleErrors);
 

@@ -1,10 +1,9 @@
 const express = require('express');
 const fortune = require('fortune');
-const config = require('c0nfig');
-const SpotifyWebApi = require('spotify-web-api-node');
 
-const validateToken = require('../../middlewares/validateToken');
 const jsonapiUtil = require('../../utils/jsonapi');
+const spotifyWebApi = require('../../utils/spotifyWebApi');
+const validateToken = require('../../middlewares/validateToken');
 
 const BadRequestError = fortune.errors.BadRequestError;
 
@@ -12,41 +11,61 @@ jsonapiUtil.serializer.register('spotify', {});
 
 module.exports = function spotify (store) {
   const router = express.Router();
-  const spotifyApi = new SpotifyWebApi({
-    clientId: config.spotify.clientId,
-    clientSecret: config.spotify.clientSecret,
-    redirectUri: config.spotify.redirectUri
-  });
 
   router.get('/authorize-url',
     validateToken(store),
-    (req, res) => {
-      const scope = [] // https://developer.spotify.com/web-api/using-scopes
-      const authorizeUrl = spotifyApi.createAuthorizeURL(scope);
-      const jsonApiData = jsonapiUtil.serializer.serialize('spotify', { authorizeUrl });
-
-      res.json(jsonApiData);
-    });
+    getSpotifyAuthorizeUrl);
 
   router.get('/access-token',
     validateToken(store),
-    async (req, res, next) => {
-      try {
-        const spotifyResponse = await spotifyApi.authorizationCodeGrant(req.query.code);
-        const jsonApiData = jsonapiUtil.serializer.serialize('spotify', spotifyResponse.body);
-
-        res.json(jsonApiData);
-      } catch (err) {
-        next(new BadRequestError('Spotify Web API error'));
-      }
-    }
-  );
+    getSpotifyAccessToken);
 
   router.get('/search',
     validateToken(store),
-    (req, res) => {
-      res.send('query spotify api here');
-    });
+    checkSpotifyAccessToken,
+    searchSpotifyAlbums);
+
+  function checkSpotifyAccessToken (req, res, next) {
+    const spotifyAccessToken = req.query.spotify_access_token;
+
+    if (!spotifyAccessToken) {
+      return next(new BadRequestError('Spotify Web API token is missing'))
+    }
+
+    req.spotifyAccessToken = spotifyAccessToken;
+
+    next();
+  }
+
+  function getSpotifyAuthorizeUrl (req, res) {
+    const scopes = [] // https://developer.spotify.com/web-api/using-scopes
+    const authorizeUrl = spotifyWebApi().createAuthorizeURL(scopes);
+    const jsonapiData = jsonapiUtil.serializer.serialize('spotify', { authorizeUrl });
+
+    res.json(jsonapiData);
+  }
+
+  async function getSpotifyAccessToken (req, res, next) {
+    try {
+      const spotifyResponse = await spotifyWebApi().authorizationCodeGrant(req.query.code);
+      const jsonapiData = jsonapiUtil.serializer.serialize('spotify', spotifyResponse.body);
+
+      res.json(jsonapiData);
+    } catch (err) {
+      next(new BadRequestError('Spotify Web API error'));
+    }
+  }
+
+  async function searchSpotifyAlbums (req, res, next) {
+    try {
+      const spotifyResponse = await spotifyWebApi(req.spotifyAccessToken).searchAlbums(req.query.q);
+      const jsonapiData = jsonapiUtil.serializer.serialize('spotify', spotifyResponse.body);
+
+      res.json(jsonapiData);
+    } catch (err) {
+      next(new BadRequestError('Spotify Web API error'));
+    }
+  }
 
   return router;
 };
