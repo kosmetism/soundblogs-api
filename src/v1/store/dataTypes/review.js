@@ -15,7 +15,7 @@ const reviewDataType = {
     // release data provided by 3rd-party api
     artist: String,
     title: String,
-    coverUrl: String,
+    coverUrls: Array(String),
     releasedAt: Date,
 
     // review data editable by user

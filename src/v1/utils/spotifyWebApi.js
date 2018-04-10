@@ -1,7 +1,7 @@
 const SpotifyWebApi = require('spotify-web-api-node');
 const config = require('c0nfig');
 
-module.exports = function createSpotifyApi (accessToken) {
+module.exports = function createSpotifyWebApi (accessToken, refreshToken) {
   const spotifyWebApi = new SpotifyWebApi({
     clientId: config.spotify.clientId,
     clientSecret: config.spotify.clientSecret,
@@ -10,6 +10,10 @@ module.exports = function createSpotifyApi (accessToken) {
 
   if (accessToken) {
     spotifyWebApi.setAccessToken(accessToken);
+  }
+
+  if (refreshToken) {
+    spotifyWebApi.setRefreshToken(refreshToken);
   }
 
   return spotifyWebApi;

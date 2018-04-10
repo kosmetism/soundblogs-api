@@ -21,6 +21,9 @@ const base = {
       type: 'string'
     },
     uniqueItems: true
+  },
+  spotifyAlbumId: {
+    type: ['string', 'null']
   }
 };
 
