@@ -2,7 +2,7 @@
   "name": "soundblogs-api",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./src/index.js",
   "scripts": {
     "start": "node ./bin/run",
     "watch": "nodemon -w ./src ./bin/run -e js,json",
@@ -44,7 +44,7 @@
   "devDependencies": {
     "ava": "^0.25.0",
     "eslint": "^4.19.1",
-    "nodemon": "^1.17.2",
+    "nodemon": "^1.17.5",
     "supertest": "^3.0.0",
     "supertest-as-promised": "^4.0.2"
   }
